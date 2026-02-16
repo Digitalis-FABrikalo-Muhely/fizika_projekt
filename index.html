@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
         
-        /* Lebegő emoji animáció */
         .floating-emoji {
             animation: float 3s ease-in-out infinite;
         }
@@ -30,7 +29,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Hiba esetén rázkódó effekt */
         .shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -44,7 +42,7 @@
 </head>
 <body class="p-6">
 
-    <!-- Okos Házikó gomb a kért egyedi stílussal -->
+    <!-- Dinamikus Házikó gomb a megadott egyedi stílussal -->
     <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
         position: fixed; 
         top: 10px; 
@@ -67,10 +65,10 @@
 
         <!-- Fejléc: Logó vízjel és Lakat -->
         <div class="text-center mb-8">
-            <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4">
+            <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4 bg-transparent">
                 <!-- Logó megjelenítése: icon.ico használatával, halványan -->
                 <img src="icon.ico" alt="Logo" 
-                     class="absolute inset-0 w-full h-full object-contain opacity-20 pointer-events-none">
+                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent mix-blend-multiply">
                 
                 <!-- Lakat ikon a logó felett -->
                 <i data-lucide="lock" class="w-12 h-12 text-slate-800 relative z-10"></i>
@@ -113,7 +111,32 @@
     <script>
         lucide.createIcons();
 
-        // Késleltetett fókusz a megbízhatóság érdekében
+        // AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE (GitHub Cache ellen)
+        async function checkUpdates() {
+            try {
+                // Lekérjük az aktuális oldal fejlécét a szervertől (cache nélkül)
+                const response = await fetch(window.location.href, { 
+                    method: 'HEAD', 
+                    cache: 'no-cache' 
+                });
+                
+                // Megnézzük az utolsó módosítás dátumát (ETag vagy Last-Modified)
+                const newVersion = response.headers.get('ETag') || response.headers.get('Last-Modified');
+                const oldVersion = localStorage.getItem('site-version');
+
+                if (oldVersion && oldVersion !== newVersion) {
+                    console.log("Új verzió elérhető! Frissítés...");
+                    localStorage.setItem('site-version', newVersion);
+                    window.location.reload(true); 
+                } else {
+                    localStorage.setItem('site-version', newVersion);
+                }
+            } catch (e) {
+                console.log("Frissítés ellenőrzése sikertelen.");
+            }
+        }
+
+        // Automatikus fókusz kezelése
         function setInitialFocus() {
             const input = document.getElementById('passInput');
             if (input) {
@@ -124,9 +147,11 @@
 
         window.onload = () => {
             setTimeout(setInitialFocus, 400);
+            // 5 másodperc után ellenőrizzük a frissítéseket
+            setTimeout(checkUpdates, 5000);
         };
 
-        // Belépési folyamat
+        // Belépési logika
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             const error = document.getElementById('errorMsg');
@@ -134,14 +159,12 @@
             
             const accessMap = {
                 "fizika2026": "index3.html",
-                // Belépési Egyházgelle
                 "4137": "index1.html",
-                // Belépési Lakszakállas
                 "6923": "index2.html"
             };
 
             if (accessMap[pass]) {
-                // Eltároljuk az aloldalt a böngésző memóriájában a visszatéréshez
+                // Elmentjük az aloldalt a visszatéréshez
                 sessionStorage.setItem('lastIndexPage', accessMap[pass]);
                 window.location.href = accessMap[pass];
             } else {
@@ -156,15 +179,12 @@
             }
         }
 
+        // Enter billentyű figyelése
         document.getElementById('passInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 checkPass();
             }
         });
     </script>
-
 </body>
 </html>
-
-
-
