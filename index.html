@@ -21,6 +21,7 @@
             overflow-x: hidden;
         }
         
+        /* Lebegő emoji animáció */
         .floating-emoji {
             animation: float 3s ease-in-out infinite;
         }
@@ -29,6 +30,7 @@
             50% { transform: translateY(-10px); }
         }
 
+        /* Hiba esetén rázkódó effekt */
         .shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -42,7 +44,7 @@
 </head>
 <body class="p-6">
 
-    <!-- Dinamikus Házikó gomb -->
+    <!-- Okos Házikó gomb a kért egyedi stílussal -->
     <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
         position: fixed; 
         top: 10px; 
@@ -65,10 +67,10 @@
 
         <!-- Fejléc: Logó vízjel és Lakat -->
         <div class="text-center mb-8">
-            <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4 bg-transparent">
-                <!-- Logó megjelenítése: ellenőrizd, hogy a fájl valóban átlátszó-e -->
+            <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4">
+                <!-- Logó megjelenítése: icon.ico használatával, halványan -->
                 <img src="icon.ico" alt="Logo" 
-                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent">
+                     class="absolute inset-0 w-full h-full object-contain opacity-20 pointer-events-none">
                 
                 <!-- Lakat ikon a logó felett -->
                 <i data-lucide="lock" class="w-12 h-12 text-slate-800 relative z-10"></i>
@@ -111,6 +113,7 @@
     <script>
         lucide.createIcons();
 
+        // Késleltetett fókusz a megbízhatóság érdekében
         function setInitialFocus() {
             const input = document.getElementById('passInput');
             if (input) {
@@ -123,23 +126,20 @@
             setTimeout(setInitialFocus, 400);
         };
 
+        // Belépési folyamat
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             const error = document.getElementById('errorMsg');
             const input = document.getElementById('passInput');
             
             const accessMap = {
-                <!-- Alapiskola -->
                 "fizika2026": "index3.html",
-                
-                <!-- Alapiskola - Egyházgelle -->
-                "4137": "index1.html",
-                
-               <!-- LaKi|Lakszakállasi Magyar Tannyelvű Alapiskola --> 
-                "6923": "index2.html"
+                "labor7": "index1.html",
+                "labor8": "index2.html"
             };
 
             if (accessMap[pass]) {
+                // Eltároljuk az aloldalt a böngésző memóriájában a visszatéréshez
                 sessionStorage.setItem('lastIndexPage', accessMap[pass]);
                 window.location.href = accessMap[pass];
             } else {
@@ -160,7 +160,5 @@
             }
         });
     </script>
-
 </body>
-
-
+</html>
