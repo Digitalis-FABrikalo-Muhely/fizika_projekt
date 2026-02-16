@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigiFAB - Belépés</title>
+    
+    <!-- Cache-ellenes meta tagek a fejlesztés idejére -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -21,6 +27,7 @@
             overflow-x: hidden;
         }
         
+        /* Lebegő emoji animáció */
         .floating-emoji {
             animation: float 3s ease-in-out infinite;
         }
@@ -29,6 +36,7 @@
             50% { transform: translateY(-10px); }
         }
 
+        /* Hiba esetén rázkódó effekt */
         .shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -42,7 +50,7 @@
 </head>
 <body class="p-6">
 
-    <!-- Dinamikus Házikó gomb -->
+    <!-- Dinamikus Házikó gomb a kért egyedi stílussal -->
     <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
         position: fixed; 
         top: 10px; 
@@ -58,14 +66,20 @@
     ">🏠</button>
 
     <div class="max-w-md w-full">
+        <!-- Szimulációkat jelképező emojik -->
         <div class="flex justify-center gap-4 mb-6 text-3xl md:text-4xl floating-emoji">
             <span>🍎</span> <span>⚡</span> <span>🔦</span> <span>🧲</span> <span>🌡️</span>
         </div>
 
+        <!-- Fejléc: Logó vízjel és Lakat -->
         <div class="text-center mb-8">
             <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4 bg-transparent">
-                <img src="icon.ico" alt="Logo" 
-                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent mix-blend-multiply">
+                <!-- Logó megjelenítése: icon.png használata az átlátszóság miatt -->
+                <img src="icon.png" alt="Logo" 
+                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent mix-blend-multiply"
+                     onerror="this.src='icon.ico'">
+                
+                <!-- Lakat ikon a logó felett -->
                 <i data-lucide="lock" class="w-12 h-12 text-slate-800 relative z-10"></i>
             </div>
             
@@ -73,6 +87,7 @@
             <p class="text-slate-500 font-medium mt-1">Digitális FABrikáló Műhely</p>
         </div>
 
+        <!-- Jelszó Kártya -->
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200">
             <div class="mb-6 text-center">
                 <h2 class="text-xl font-bold text-slate-800">Iskola jelszava a folytatáshoz</h2>
@@ -105,7 +120,7 @@
     <script>
         lucide.createIcons();
 
-        // --- 1. SERVICE WORKER ELTÁVOLÍTÓ (KÖTELEZŐ A TISZTA FRISSÍTÉSHEZ) ---
+        // 1. ELAVULT SERVICE WORKEREK TÖRLÉSE (A frissítési hiba megelőzésére)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) {
@@ -115,7 +130,7 @@
             });
         }
 
-        // --- 2. AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE ---
+        // 2. AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE (Bypass GitHub Cache)
         async function checkUpdates() {
             try {
                 const response = await fetch(window.location.href, { 
@@ -126,13 +141,14 @@
                 const oldVersion = localStorage.getItem('site-version');
 
                 if (oldVersion && oldVersion !== newVersion) {
+                    console.log("Új verzió észlelve! Oldal frissítése...");
                     localStorage.setItem('site-version', newVersion);
                     window.location.reload(true); 
                 } else {
                     localStorage.setItem('site-version', newVersion);
                 }
             } catch (e) {
-                console.log("Offline mód vagy hálózati hiba.");
+                console.log("Hálózati hiba az ellenőrzéskor.");
             }
         }
 
@@ -146,7 +162,7 @@
 
         window.onload = () => {
             setTimeout(setInitialFocus, 400);
-            setTimeout(checkUpdates, 5000);
+            setTimeout(checkUpdates, 3000); 
         };
 
         function checkPass() {
