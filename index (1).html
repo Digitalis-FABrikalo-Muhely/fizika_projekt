@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiFAB - Belépés</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+            color: #1e293b; 
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .floating-emoji {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <!-- Dinamikus Házikó gomb -->
+    <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
+        position: fixed; 
+        top: 10px; 
+        right: 140px; 
+        padding: 10px 10px; 
+        background: #FFF3eb; 
+        color: green; 
+        border: none; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(2,2,2,0.2);
+    ">🏠</button>
+
+    <div class="max-w-md w-full">
+        <!-- Szimulációkat jelképező emojik -->
+        <div class="flex justify-center gap-4 mb-6 text-3xl md:text-4xl floating-emoji">
+            <span>🍎</span> <span>⚡</span> <span>🔦</span> <span>🧲</span> <span>🌡️</span>
+        </div>
+
+        <!-- Fejléc: Logó vízjel és Lakat -->
+        <div class="text-center mb-8">
+            <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4 bg-transparent">
+                <!-- Logó megjelenítése: ellenőrizd, hogy a fájl valóban átlátszó-e -->
+                <img src="icon.ico" alt="Logo" 
+                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent">
+                
+                <!-- Lakat ikon a logó felett -->
+                <i data-lucide="lock" class="w-12 h-12 text-slate-800 relative z-10"></i>
+            </div>
+            
+            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight uppercase">DigiFAB fizika labor</h1>
+            <p class="text-slate-500 font-medium mt-1">Digitális FABrikáló Műhely</p>
+        </div>
+
+        <!-- Jelszó Kártya -->
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200">
+            <div class="mb-6 text-center">
+                <h2 class="text-xl font-bold text-slate-800">Iskola jelszava a folytatáshoz</h2>
+                <p class="text-sm text-slate-400 mt-2 font-medium leading-relaxed">
+                    Kérjük, add meg a központi azonosítót!
+                </p>
+            </div>
+            
+            <div class="space-y-4">
+                <input type="password" id="passInput" placeholder="Jelszó" 
+                       class="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all text-center text-lg font-bold block">
+                
+                <button onclick="checkPass()" 
+                        class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black hover:bg-blue-600 transition-all shadow-lg flex items-center justify-center gap-2 group">
+                    BELÉPÉS 
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+            
+            <p id="errorMsg" class="text-red-500 mt-4 text-sm font-bold text-center hidden flex items-center justify-center gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i> Hibás jelszó! Próbáld újra.
+            </p>
+        </div>
+
+        <div class="mt-8 text-center text-slate-400 text-sm font-bold tracking-widest uppercase">
+            .:henz:.
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function setInitialFocus() {
+            const input = document.getElementById('passInput');
+            if (input) {
+                input.focus();
+                input.click();
+            }
+        }
+
+        window.onload = () => {
+            setTimeout(setInitialFocus, 400);
+        };
+
+        function checkPass() {
+            const pass = document.getElementById('passInput').value;
+            const error = document.getElementById('errorMsg');
+            const input = document.getElementById('passInput');
+            
+            const accessMap = {
+                <!-- Alapiskola -->
+                "fizika2026": "index3.html",
+                
+                <!-- Alapiskola - Egyházgelle -->
+                "4137": "index1.html",
+                
+               <!-- LaKi|Lakszakállasi Magyar Tannyelvű Alapiskola --> 
+                "6923": "index2.html"
+            };
+
+            if (accessMap[pass]) {
+                sessionStorage.setItem('lastIndexPage', accessMap[pass]);
+                window.location.href = accessMap[pass];
+            } else {
+                error.classList.remove('hidden');
+                input.classList.add('border-red-500', 'bg-red-50', 'shake');
+                input.value = ""; 
+                input.focus();
+                
+                setTimeout(() => {
+                    input.classList.remove('shake');
+                }, 400);
+            }
+        }
+
+        document.getElementById('passInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPass();
+            }
+        });
+    </script>
+
+</body>
+
+
