@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigiFAB - Belépés</title>
     
-    <!-- Cache-ellenes meta tagek a fejlesztés idejére -->
+    <!-- Gyorsítótár (cache) elleni védelem a fejlesztés idejére -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -27,7 +27,7 @@
             overflow-x: hidden;
         }
         
-        /* Lebegő emoji animáció */
+        /* Lebegő emoji animáció a látvány kedvéért */
         .floating-emoji {
             animation: float 3s ease-in-out infinite;
         }
@@ -50,7 +50,7 @@
 </head>
 <body class="p-6">
 
-    <!-- Dinamikus Házikó gomb a kért egyedi stílussal -->
+    <!-- Dinamikus Házikó gomb - Visszavisz az utolsó megnyitott aloldalra -->
     <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
         position: fixed; 
         top: 10px; 
@@ -73,10 +73,10 @@
 
         <!-- Fejléc: Logó vízjel és Lakat -->
         <div class="text-center mb-8">
-            <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4 bg-transparent">
-                <!-- Logó megjelenítése: icon.png használata az átlátszóság miatt -->
+            <div class="relative inline-flex items-center justify-center w-32 h-32 mb-4 bg-transparent">
+                <!-- Logó: icon.png használata a fekete háttér ellen, halványítva -->
                 <img src="icon.png" alt="Logo" 
-                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent mix-blend-multiply"
+                     class="absolute inset-0 w-full h-full object-contain opacity-30 pointer-events-none bg-transparent"
                      onerror="this.src='icon.ico'">
                 
                 <!-- Lakat ikon a logó felett -->
@@ -120,17 +120,16 @@
     <script>
         lucide.createIcons();
 
-        // 1. ELAVULT SERVICE WORKEREK TÖRLÉSE (A frissítési hiba megelőzésére)
+        // 1. SERVICE WORKER TÖRLÉSE (Hogy ne ragadjon be a régi verzió)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) {
                     registration.unregister();
-                    console.log('Régi Service Worker eltávolítva.');
                 }
             });
         }
 
-        // 2. AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE (Bypass GitHub Cache)
+        // 2. AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE (GitHub Cache megkerülése)
         async function checkUpdates() {
             try {
                 const response = await fetch(window.location.href, { 
@@ -141,17 +140,17 @@
                 const oldVersion = localStorage.getItem('site-version');
 
                 if (oldVersion && oldVersion !== newVersion) {
-                    console.log("Új verzió észlelve! Oldal frissítése...");
                     localStorage.setItem('site-version', newVersion);
                     window.location.reload(true); 
                 } else {
                     localStorage.setItem('site-version', newVersion);
                 }
             } catch (e) {
-                console.log("Hálózati hiba az ellenőrzéskor.");
+                console.log("Frissítés ellenőrzése nem lehetséges.");
             }
         }
 
+        // Fókusz az adatbeviteli mezőre
         function setInitialFocus() {
             const input = document.getElementById('passInput');
             if (input) {
@@ -162,9 +161,11 @@
 
         window.onload = () => {
             setTimeout(setInitialFocus, 400);
-            setTimeout(checkUpdates, 3000); 
+            // 5 másodperc után ellenőrizzük, van-e új kód a GitHubon
+            setTimeout(checkUpdates, 5000);
         };
 
+        // Belépési logika
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             const error = document.getElementById('errorMsg');
@@ -177,6 +178,7 @@
             };
 
             if (accessMap[pass]) {
+                // Elmentjük, hová léptünk be a visszairányításhoz
                 sessionStorage.setItem('lastIndexPage', accessMap[pass]);
                 window.location.href = accessMap[pass];
             } else {
@@ -188,6 +190,7 @@
             }
         }
 
+        // Enter billentyű esemény
         document.getElementById('passInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') checkPass();
         });
