@@ -724,17 +724,19 @@
     init();
 </script>
 </body>
-<button onclick="location.href='index.html'" style="
-    position: fixed; 
-    top: 10px; 
-    right: 140px; 
-    padding: 10px 10px; 
-    background: #FFF3eb; 
-    color: green; 
-    border: none; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(2,2,2,0.2);
-">🏠</button>
+ <!-- Dinamikus Házikó gomb -->
+    <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
+        position: fixed; 
+        top: 10px; 
+        right: 140px; 
+        padding: 10px 10px; 
+        background: #FFF3eb; 
+        color: green; 
+        border: none; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(2,2,2,0.2);
+    ">🏠</button>
+
 </html>
