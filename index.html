@@ -25,6 +25,8 @@
             justify-content: center;
             min-height: 100vh;
             overflow-x: hidden;
+            /* Biztosítjuk, hogy ne legyen kényszerített sötét mód */
+            color-scheme: light;
         }
         
         /* Lebegő emoji animáció a látvány kedvéért */
@@ -73,10 +75,11 @@
 
         <!-- Fejléc: Logó vízjel és Lakat -->
         <div class="text-center mb-8">
-            <div class="relative inline-flex items-center justify-center w-32 h-32 mb-4 bg-transparent">
-                <!-- Logó: icon.png használata a fekete háttér ellen, halványítva -->
+            <div class="relative inline-flex items-center justify-center w-32 h-32 mb-4">
+                <!-- Logó: icon.png preferált, mix-blend-multiply segít eltüntetni a nem átlátszó fehér hátteret -->
                 <img src="icon.png" alt="Logo" 
-                     class="absolute inset-0 w-full h-full object-contain opacity-30 pointer-events-none bg-transparent"
+                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none mix-blend-multiply"
+                     style="background-color: transparent !important;"
                      onerror="this.src='icon.ico'">
                 
                 <!-- Lakat ikon a logó felett -->
