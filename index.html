@@ -42,7 +42,7 @@
 </head>
 <body class="p-6">
 
-    <!-- Dinamikus Házikó gomb a megadott egyedi stílussal -->
+    <!-- Dinamikus Házikó gomb -->
     <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
         position: fixed; 
         top: 10px; 
@@ -58,19 +58,14 @@
     ">🏠</button>
 
     <div class="max-w-md w-full">
-        <!-- Szimulációkat jelképező emojik -->
         <div class="flex justify-center gap-4 mb-6 text-3xl md:text-4xl floating-emoji">
             <span>🍎</span> <span>⚡</span> <span>🔦</span> <span>🧲</span> <span>🌡️</span>
         </div>
 
-        <!-- Fejléc: Logó vízjel és Lakat -->
         <div class="text-center mb-8">
             <div class="relative inline-flex items-center justify-center w-28 h-28 mb-4 bg-transparent">
-                <!-- Logó megjelenítése: icon.ico használatával, halványan -->
                 <img src="icon.ico" alt="Logo" 
                      class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent mix-blend-multiply">
-                
-                <!-- Lakat ikon a logó felett -->
                 <i data-lucide="lock" class="w-12 h-12 text-slate-800 relative z-10"></i>
             </div>
             
@@ -78,7 +73,6 @@
             <p class="text-slate-500 font-medium mt-1">Digitális FABrikáló Műhely</p>
         </div>
 
-        <!-- Jelszó Kártya -->
         <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200">
             <div class="mb-6 text-center">
                 <h2 class="text-xl font-bold text-slate-800">Iskola jelszava a folytatáshoz</h2>
@@ -111,32 +105,37 @@
     <script>
         lucide.createIcons();
 
-        // AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE (GitHub Cache ellen)
+        // --- 1. SERVICE WORKER ELTÁVOLÍTÓ (KÖTELEZŐ A TISZTA FRISSÍTÉSHEZ) ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                    console.log('Régi Service Worker eltávolítva.');
+                }
+            });
+        }
+
+        // --- 2. AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE ---
         async function checkUpdates() {
             try {
-                // Lekérjük az aktuális oldal fejlécét a szervertől (cache nélkül)
                 const response = await fetch(window.location.href, { 
                     method: 'HEAD', 
                     cache: 'no-cache' 
                 });
-                
-                // Megnézzük az utolsó módosítás dátumát (ETag vagy Last-Modified)
                 const newVersion = response.headers.get('ETag') || response.headers.get('Last-Modified');
                 const oldVersion = localStorage.getItem('site-version');
 
                 if (oldVersion && oldVersion !== newVersion) {
-                    console.log("Új verzió elérhető! Frissítés...");
                     localStorage.setItem('site-version', newVersion);
                     window.location.reload(true); 
                 } else {
                     localStorage.setItem('site-version', newVersion);
                 }
             } catch (e) {
-                console.log("Frissítés ellenőrzése sikertelen.");
+                console.log("Offline mód vagy hálózati hiba.");
             }
         }
 
-        // Automatikus fókusz kezelése
         function setInitialFocus() {
             const input = document.getElementById('passInput');
             if (input) {
@@ -147,11 +146,9 @@
 
         window.onload = () => {
             setTimeout(setInitialFocus, 400);
-            // 5 másodperc után ellenőrizzük a frissítéseket
             setTimeout(checkUpdates, 5000);
         };
 
-        // Belépési logika
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             const error = document.getElementById('errorMsg');
@@ -164,7 +161,6 @@
             };
 
             if (accessMap[pass]) {
-                // Elmentjük az aloldalt a visszatéréshez
                 sessionStorage.setItem('lastIndexPage', accessMap[pass]);
                 window.location.href = accessMap[pass];
             } else {
@@ -172,18 +168,12 @@
                 input.classList.add('border-red-500', 'bg-red-50', 'shake');
                 input.value = ""; 
                 input.focus();
-                
-                setTimeout(() => {
-                    input.classList.remove('shake');
-                }, 400);
+                setTimeout(() => input.classList.remove('shake'), 400);
             }
         }
 
-        // Enter billentyű figyelése
         document.getElementById('passInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkPass();
-            }
+            if (e.key === 'Enter') checkPass();
         });
     </script>
 </body>
