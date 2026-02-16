@@ -119,9 +119,11 @@
                     <span class="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em]">Fizika Labor</span>
                 </div>
             </div>
-            <div class="hidden md:flex items-center gap-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                <span class="flex items-center gap-2"><i data-lucide="layout-grid" class="w-4 h-4 text-blue-500"></i> Standardizált</span>
-                <span class="flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4 text-emerald-500"></i> Tananyag-alapú</span>
+            <!-- Iskola neve a jobb oldalon -->
+            <div class="hidden md:flex items-center gap-2 text-slate-500 font-bold text-xs uppercase tracking-widest">
+                <span class="text-blue-600">LaKi</span>
+                <span class="text-slate-300">|</span>
+                <span>Lakszakállasi Magyar Tannyelvű Alapiskola</span>
             </div>
         </div>
     </header>
@@ -192,23 +194,7 @@
             </div>
         </div>
     </footer>
-<button onclick="openQR()" class="fixed top-1/2 -translate-y-1/2 right-8 z-50 bg-blue-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 hover:bg-blue-700 transition-all group animate-bounce">
-        <i data-lucide="qr-code" class="w-8 h-8"></i>
-    </button>
 
-    <div id="qrModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full relative">
-            <button onclick="closeQR()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-900">
-                <i data-lucide="x-circle" class="w-8 h-8"></i>
-            </button>
-            <div class="text-center">
-                <h3 class="text-2xl font-black text-slate-900 mb-2">Használd mobilon, tableten📱</h3>
-                <p class="text-slate-500 text-sm mb-6">Olvasd be a QR-kódot az eszközödön való használathoz!</p>
-                <img src="geniali_online_fizika_github.png" alt="QR kód" class="w-full h-auto rounded-2xl shadow-lg mb-6 border-4 border-slate-50">
-                <button onclick="closeQR()" class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Bezárás</button>
-            </div>
-        </div>
-    </div>
     <script>
         const simulations = [
             // 6. OSZTÁLY
@@ -518,32 +504,5 @@
             })();
         });
     </script>
-    <script>
-        // 1. Meglévő ikonok betöltése (ha már ott van, ne másold le mégegyszer)
-        lucide.createIcons();
-
-        // 2. A PWA regisztrációs kód (ez az egyik "PWA kód")
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-
-        // 3. A QR-kód nyitó/záró funkciói
-        function openQR() {
-            document.getElementById('qrModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeQR() {
-            document.getElementById('qrModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        // --- Ide jöhet az időkorlát kódja is, amit korábban megbeszéltünk ---
-    </script>
 </body>
-
 </html>
-
-
-
-
