@@ -25,11 +25,10 @@
             justify-content: center;
             min-height: 100vh;
             overflow-x: hidden;
-            /* Biztosítjuk, hogy ne legyen kényszerített sötét mód */
+            /* Biztosítjuk a világos módot */
             color-scheme: light;
         }
         
-        /* Lebegő emoji animáció a látvány kedvéért */
         .floating-emoji {
             animation: float 3s ease-in-out infinite;
         }
@@ -38,7 +37,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Hiba esetén rázkódó effekt */
         .shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
@@ -52,7 +50,7 @@
 </head>
 <body class="p-6">
 
-    <!-- Dinamikus Házikó gomb - Visszavisz az utolsó megnyitott aloldalra -->
+    <!-- Dinamikus Házikó gomb -->
     <button onclick="const last = sessionStorage.getItem('lastIndexPage'); window.location.href = last ? last : 'index.html';" style="
         position: fixed; 
         top: 10px; 
@@ -75,11 +73,10 @@
 
         <!-- Fejléc: Logó vízjel és Lakat -->
         <div class="text-center mb-8">
-            <div class="relative inline-flex items-center justify-center w-32 h-32 mb-4">
-                <!-- Logó: icon.png preferált, mix-blend-multiply segít eltüntetni a nem átlátszó fehér hátteret -->
+            <div class="relative inline-flex items-center justify-center w-32 h-32 mb-4 bg-transparent">
+                <!-- Logó: Eltávolítottuk a mix-blend módot a feketeség elkerülése érdekében -->
                 <img src="icon.png" alt="Logo" 
-                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none mix-blend-multiply"
-                     style="background-color: transparent !important;"
+                     class="absolute inset-0 w-full h-full object-contain opacity-25 pointer-events-none bg-transparent"
                      onerror="this.src='icon.ico'">
                 
                 <!-- Lakat ikon a logó felett -->
@@ -123,7 +120,7 @@
     <script>
         lucide.createIcons();
 
-        // 1. SERVICE WORKER TÖRLÉSE (Hogy ne ragadjon be a régi verzió)
+        // 1. SERVICE WORKER TÖRLÉSE (A frissítések biztosításához)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for(let registration of registrations) {
@@ -132,7 +129,7 @@
             });
         }
 
-        // 2. AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE (GitHub Cache megkerülése)
+        // 2. AUTOMATIKUS FRISSÍTÉS ELLENŐRZÉSE
         async function checkUpdates() {
             try {
                 const response = await fetch(window.location.href, { 
@@ -149,11 +146,10 @@
                     localStorage.setItem('site-version', newVersion);
                 }
             } catch (e) {
-                console.log("Frissítés ellenőrzése nem lehetséges.");
+                console.log("Frissítés ellenőrzése sikertelen.");
             }
         }
 
-        // Fókusz az adatbeviteli mezőre
         function setInitialFocus() {
             const input = document.getElementById('passInput');
             if (input) {
@@ -164,11 +160,9 @@
 
         window.onload = () => {
             setTimeout(setInitialFocus, 400);
-            // 5 másodperc után ellenőrizzük, van-e új kód a GitHubon
             setTimeout(checkUpdates, 5000);
         };
 
-        // Belépési logika
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             const error = document.getElementById('errorMsg');
@@ -181,7 +175,6 @@
             };
 
             if (accessMap[pass]) {
-                // Elmentjük, hová léptünk be a visszairányításhoz
                 sessionStorage.setItem('lastIndexPage', accessMap[pass]);
                 window.location.href = accessMap[pass];
             } else {
@@ -193,7 +186,6 @@
             }
         }
 
-        // Enter billentyű esemény
         document.getElementById('passInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') checkPass();
         });
