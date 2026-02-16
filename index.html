@@ -162,38 +162,9 @@
             }
         });
     </script>
-// Automatikus frissítés kényszerítése, ha új verzió van a GitHubon
-async function checkUpdates() {
-    try {
-        // Lekérjük az aktuális oldal fejlécét a szervertől (cache nélkül)
-        const response = await fetch(window.location.href, { 
-            method: 'HEAD', 
-            cache: 'no-cache' 
-        });
-        
-        // Megnézzük az utolsó módosítás dátumát (ETag vagy Last-Modified)
-        const newETag = response.headers.get('ETag');
-        const oldETag = localStorage.getItem('site-version');
 
-        if (oldETag && oldETag !== newETag) {
-            console.log("Új verzió elérhető! Frissítés...");
-            localStorage.setItem('site-version', newETag);
-            window.location.reload(true); // Kényszerített újratöltés
-        } else {
-            localStorage.setItem('site-version', newETag);
-        }
-    } catch (e) {
-        console.error("Frissítés ellenőrzése sikertelen.");
-    }
-}
-
-// Futás indítása betöltés után
-window.addEventListener('load', () => {
-    // Csak 10 másodperc után ellenőrizze, hogy ne zavarja a belépést
-    setTimeout(checkUpdates, 10000); 
-});
-    
 </body>
 </html>
+
 
 
